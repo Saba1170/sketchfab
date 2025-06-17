@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sketchfab Embed Controlled</title>
+  <style>
+    body, html {
+      margin: 0; padding: 0; height: 100%; overflow: hidden;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <iframe id="skfb-iframe" src="https://sketchfab.com/models/d737b6ed8e23416fa820a3e6c0572eef/embed?autostart=1&ui_controls=0&ui_infos=0&ui_hint=0&ui_stop=0" allowfullscreen></iframe>
+
+  <script src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js"></script>
+
+  <script>
+    var iframe = document.getElementById('skfb-iframe');
+    var client = new Sketchfab(iframe);
+    var viewpoints = [0,1,2,3,4,5];
+    var currentViewpoint = 0;
+    var viewer;
+
+    client.init('d737b6ed8e23416fa820a3e6c0572eef', {
+      success: function(api) {
+        viewer = api;
+        viewer.start(function() {
+          viewer.setEnableCameraControls(false);
+          viewer.setViewpoint(viewpoints[currentViewpoint]);
+
+          iframe.addEventListener('click', function() {
+            currentViewpoint = (currentViewpoint + 1) % viewpoints.length;
+            viewer.setViewpoint(viewpoints[currentViewpoint]);
+          });
+        });
+      },
+      error: function() {
+        console.error('Sketchfab API loading failed.');
+      }
+    });
+  </script>
+
+</body>
+</html>
